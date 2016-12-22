@@ -202,15 +202,18 @@ static const long event_mask_table[] = {
 static inline long
 Eventmask_val( value em_list )
 {
-    long event_mask = 0;
-    while ( em_list != Val_emptylist )
-    {
-        value head = Field(em_list, 0);
-        long mask = event_mask_table[Long_val(head)];
-        event_mask |= mask;
-        em_list = Field(em_list, 1);
-    }
-    return event_mask;
+  long event_mask = 0;
+  while ( em_list != Val_emptylist )
+  {
+    //value head = Field(em_list, 0);
+    value head;
+    caml_read_field(em_list, 0, &head);
+    long mask = event_mask_table[Long_val(head)];
+    event_mask |= mask;
+    //em_list = Field(em_list, 1);
+    caml_read_field(em_list, 1, &em_list);
+  }
+  return event_mask;
 }
 
 static inline value Focus_state_val(value mode) {
